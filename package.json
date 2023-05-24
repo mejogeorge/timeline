@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "predeploy": "vite build",
+    "predeploy": "PUBLIC_URL=https://mejogeorge.github.io/timeline && vite build",
     "deploy": "gh-pages -d build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
