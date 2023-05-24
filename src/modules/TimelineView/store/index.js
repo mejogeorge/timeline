@@ -10,8 +10,15 @@ export const useTimelineStore = create(
     (set, get) => ({
       ...initialState,
       addNewItemToTimeline: () => {
-        const id = uuid4()
-        const { group, title, startTime, endTime } = get().draftItem
+        const {
+          id: editId,
+          edit,
+          group,
+          title,
+          startTime,
+          endTime
+        } = get().draftItem
+        const id = editId || uuid4()
         const newItem = {
           id,
           group,
@@ -19,9 +26,26 @@ export const useTimelineStore = create(
           start_time: startTime,
           end_time: endTime
         }
-        set(state => ({
-          timeItems: [...state.timeItems, newItem]
-        }))
+        let payload = []
+        const { timeItems } = get()
+        if (edit) {
+          payload = timeItems.map(item => {
+            if (item.id === id) {
+              return newItem
+            }
+            return item
+          })
+        } else {
+          payload = [...timeItems, newItem]
+        }
+        set({
+          timeItems: payload.filter(p => p.id !== editId)
+        })
+        setTimeout(() => {
+          set({
+            timeItems: payload
+          })
+        }, 0)
       },
       addNewGroup: ({ groupName }) => {
         const id = uuid4()
@@ -56,6 +80,27 @@ export const useTimelineStore = create(
       clearDraft: () => {
         set({
           draftItem: {}
+        })
+      },
+      editItem: itemId => {
+        const { timeItems } = get()
+        const editItem = timeItems.find(({ id }) => id === itemId)
+        console.log('editItem', editItem)
+        set({
+          draftItem: {
+            id: editItem.id,
+            title: editItem.title,
+            group: editItem.group,
+            startTime: editItem.start_time * 1,
+            endTime: editItem.end_time * 1,
+            edit: true
+          }
+        })
+      },
+      deleteItem: () => {
+        const { draftItem, timeItems } = get()
+        set({
+          timeItems: timeItems.filter(p => p.id !== draftItem.id)
         })
       }
     }),

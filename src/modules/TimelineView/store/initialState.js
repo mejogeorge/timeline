@@ -7,7 +7,8 @@ export default {
     title: '',
     group: '',
     startTime: Date.now(),
-    endTime: Date.now()
+    endTime: Date.now(),
+    edit: false
   },
   defaultTime: {
     starTime: Date.now(),

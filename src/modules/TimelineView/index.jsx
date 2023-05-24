@@ -11,7 +11,8 @@ export default () => {
     groups: state.groups,
     setShowAddItem: state.setShowAddItem,
     setDraftItem: state.setDraftItem,
-    showAddItemForm: state.showAddItemForm
+    showAddItemForm: state.showAddItemForm,
+    editItem: state.editItem
   }))
 
   const itemRenderer = ({ itemContext, getItemProps }) => {
@@ -52,9 +53,10 @@ export default () => {
           stackItems
           itemHeightRatio={0.75}
           canMove={true}
-          canResize={'both'}
-          onItemDoubleClick={data => {
-            console.log('onItemDoubleClick', data)
+          onItemDoubleClick={itemId => {
+            console.log('onItemDoubleClick', itemId)
+            timelineStore.editItem(itemId)
+            timelineStore.setShowAddItem(true)
           }}
           onCanvasDoubleClick={(groupId, time, e) => {
             timelineStore.setDraftItem({

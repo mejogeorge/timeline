@@ -15,7 +15,8 @@ export default props => {
     addNewItemToTimeline: state.addNewItemToTimeline,
     setDraftItem: state.setDraftItem,
     draftItem: state.draftItem,
-    setShowAddItem: state.setShowAddItem
+    setShowAddItem: state.setShowAddItem,
+    deleteItem: state.deleteItem
   }))
 
   // const [showCalender, setShowCalender] = useState({})
@@ -45,6 +46,7 @@ export default props => {
             style={{ flex: 2 }}
             type='text'
             onChange={e => onFieldChange('title')(e.target.value)}
+            value={timelineStore.draftItem.title}
           />
         </div>
         <div style={{ flexDirection: 'row', flex: 1 }}>
@@ -74,8 +76,19 @@ export default props => {
             timelineStore.setShowAddItem(false)
           }}
         >
-          ADD
+          {timelineStore.draftItem.edit ? 'UPDATE' : 'ADD'}
         </button>
+        {timelineStore.draftItem.edit ? (
+          <button
+            variant='contained'
+            onClick={() => {
+              timelineStore.deleteItem()
+              timelineStore.setShow(false)
+            }}
+          >
+            DELETE
+          </button>
+        ) : null}
         <button
           variant='contained'
           onClick={() => timelineStore.setShow(false)}
