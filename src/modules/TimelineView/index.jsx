@@ -2,8 +2,8 @@ import React, { useState, useId } from 'react'
 import 'react-calendar-timeline/lib/Timeline.css'
 import Timeline from 'react-calendar-timeline'
 import moment from 'moment'
-import AddItemForm from './modules/AddItemForm'
-import { useTimelineStore } from './modules/store'
+import AddItemForm from './AddItemForm'
+import { useTimelineStore } from './store'
 
 export default props => {
   // const [showAddItem, setShowAddItem] = useState(false)
@@ -11,7 +11,8 @@ export default props => {
   const timelineStore = useTimelineStore(state => ({
     timeItems: state.timeItems,
     addNewItemToTimeline: state.addNewItemToTimeline,
-    groups: state.groups
+    groups: state.groups,
+    setShowAddItem: state.setShowAddItem
   }))
 
   const itemRenderer = ({
@@ -70,35 +71,39 @@ export default props => {
     )
   }
   return (
-    <Timeline
-      groups={timelineStore.groups}
-      items={timelineStore.timeItems}
-      fullUpdate
-      itemTouchSendsClick={false}
-      stackItems
-      itemHeightRatio={0.75}
-      canMove={true}
-      canResize={'both'}
-      onItemClick={(itemId, e, time) => {
-        alert('onItemClick')
-      }}
-      onItemSelect={() => {
-        alert('onItemSelect')
-      }}
-      onCanvasDoubleClick={(groupId, time, e) => {
-        console.log('onCanvasClick', {
-          groupId,
-          time,
-          e
-        })
-        timelineStore.addNewItemToTimeline({
-          groupId,
-          time
-        })
-      }}
-      itemRenderer={itemRenderer}
-      defaultTimeStart={moment().add(-1, 'hour')}
-      defaultTimeEnd={moment().add(12, 'hour')}
-    />
+    <>
+      <Timeline
+        groups={timelineStore.groups}
+        items={timelineStore.timeItems}
+        fullUpdate
+        itemTouchSendsClick={false}
+        stackItems
+        itemHeightRatio={0.75}
+        canMove={true}
+        canResize={'both'}
+        onItemClick={(itemId, e, time) => {
+          alert('onItemClick')
+        }}
+        onItemSelect={() => {
+          alert('onItemSelect')
+        }}
+        onCanvasDoubleClick={(groupId, time, e) => {
+          console.log('onCanvasClick', {
+            groupId,
+            time,
+            e
+          })
+          timelineStore.setShowAddItem(true)
+          // timelineStore.addNewItemToTimeline({
+          //   groupId,
+          //   time
+          // })
+        }}
+        itemRenderer={itemRenderer}
+        defaultTimeStart={moment().add(-1, 'hour')}
+        defaultTimeEnd={moment().add(12, 'hour')}
+      />
+      <AddItemForm />
+    </>
   )
 }

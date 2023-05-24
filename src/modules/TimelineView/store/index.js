@@ -37,6 +37,11 @@ export const useTimelineStore = create(
         timeItems: timeItemsSample,
         groups: groupsSample
       })
+    },
+    setShowAddItem: showAddItemForm => {
+      set({
+        showAddItemForm
+      })
     }
   }))
 )
