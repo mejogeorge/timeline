@@ -3,6 +3,8 @@ import Timeline from 'react-calendar-timeline'
 import moment from 'moment'
 import AddItemForm from './AddItemForm'
 import { useTimelineStore } from './store'
+import TimelineEmpty from './TimelineEmpty'
+import Hint from './Hint'
 
 export default () => {
   const timelineStore = useTimelineStore(state => ({
@@ -45,32 +47,37 @@ export default () => {
   return (
     <>
       {timelineStore.groups?.length ? (
-        <Timeline
-          groups={timelineStore.groups}
-          items={timelineStore.timeItems}
-          fullUpdate
-          itemTouchSendsClick={false}
-          stackItems
-          itemHeightRatio={0.75}
-          canMove={true}
-          onItemDoubleClick={itemId => {
-            console.log('onItemDoubleClick', itemId)
-            timelineStore.editItem(itemId)
-            timelineStore.setShowAddItem(true)
-          }}
-          onCanvasDoubleClick={(groupId, time, e) => {
-            timelineStore.setDraftItem({
-              group: groupId,
-              startTime: time,
-              endTime: time + 60 * 60 * 1000
-            })
-            timelineStore.setShowAddItem(true)
-          }}
-          itemRenderer={itemRenderer}
-          defaultTimeStart={moment().add(-1, 'hour')}
-          defaultTimeEnd={moment().add(1, 'day')}
-        />
-      ) : null}
+        <>
+          <Timeline
+            groups={timelineStore.groups}
+            items={timelineStore.timeItems}
+            fullUpdate
+            itemTouchSendsClick={false}
+            stackItems
+            itemHeightRatio={0.75}
+            canMove={true}
+            onItemDoubleClick={itemId => {
+              console.log('onItemDoubleClick', itemId)
+              timelineStore.editItem(itemId)
+              timelineStore.setShowAddItem(true)
+            }}
+            onCanvasDoubleClick={(groupId, time, e) => {
+              timelineStore.setDraftItem({
+                group: groupId,
+                startTime: time,
+                endTime: time + 60 * 60 * 1000
+              })
+              timelineStore.setShowAddItem(true)
+            }}
+            itemRenderer={itemRenderer}
+            defaultTimeStart={moment().add(-1, 'hour')}
+            defaultTimeEnd={moment().add(1, 'day')}
+          />
+          <Hint />
+        </>
+      ) : (
+        <TimelineEmpty />
+      )}
       {timelineStore.showAddItemForm && <AddItemForm />}
     </>
   )

@@ -6,9 +6,10 @@ import Popup from '../../../components/Popup'
 import { useTimelineStore } from '../store'
 import DateTimePicker from 'react-datetime-picker'
 import moment from 'moment'
+import styles from './AddItemForm.module.scss'
 
 Popup
-export default props => {
+export default () => {
   const timelineStore = useTimelineStore(state => ({
     setShow: state.setShowAddItem,
     showForm: state.showAddItemForm,
@@ -19,8 +20,6 @@ export default props => {
     deleteItem: state.deleteItem
   }))
 
-  // const [showCalender, setShowCalender] = useState({})
-
   const onFieldChange = key => value => {
     timelineStore.setDraftItem({
       [key]: value
@@ -29,72 +28,79 @@ export default props => {
 
   return (
     <Popup show>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          padding: 20,
-          backgroundColor: 'white',
-          borderRadius: 6
-        }}
-      >
-        <div style={{ flexDirection: 'row' }}>
-          <span style={{ flex: 1, color: 'black', backgroundColor: 'pink' }}>
-            Title
-          </span>
+      <div className={styles.container}>
+        <span className={styles.headerText}>
+          {timelineStore.draftItem.edit
+            ? 'UPDATE / DELETE ITEM'
+            : 'ADD NEW ITEM'}
+        </span>
+        <div className={styles.itemWrapper}>
+          <span className={styles.leftText}>Title:</span>
           <input
-            style={{ flex: 2 }}
+            placeholder='Enter Title'
+            className={styles.input}
             type='text'
             onChange={e => onFieldChange('title')(e.target.value)}
             value={timelineStore.draftItem.title}
           />
         </div>
-        <div style={{ flexDirection: 'row', flex: 1 }}>
-          <span style={{ flex: 1, color: 'black' }}>start time</span>
+        <div className={styles.itemWrapper}>
+          <span className={styles.leftText}>Start Time:</span>
           <DateTimePicker
+            className={styles.calendar}
             onChange={value => {
               console.log('onChange', value)
               onFieldChange('startTime')(value)
             }}
             value={moment(timelineStore.draftItem['startTime']).toDate()}
+            clearIcon={null}
           />
         </div>
-        <div style={{ flexDirection: 'row', flex: 1 }}>
-          <span style={{ flex: 1, color: 'black' }}>end time</span>
+        <div className={styles.itemWrapper}>
+          <span className={styles.leftText}>End Time:</span>
           <DateTimePicker
+            className={styles.calendar}
             onChange={onFieldChange('endTime')}
             value={moment(timelineStore.draftItem['endTime']).toDate()}
+            clearIcon={null}
           />
         </div>
-        <button
-          variant='contained'
-          onClick={() => {
-            if (!timelineStore.draftItem.title) {
-              return alert('Please enter the title')
-            }
-            timelineStore.addNewItemToTimeline()
-            timelineStore.setShowAddItem(false)
-          }}
-        >
-          {timelineStore.draftItem.edit ? 'UPDATE' : 'ADD'}
-        </button>
-        {timelineStore.draftItem.edit ? (
+        <div className={styles.buttons}>
           <button
+            className='button'
             variant='contained'
             onClick={() => {
-              timelineStore.deleteItem()
-              timelineStore.setShow(false)
+              if (!timelineStore.draftItem.title) {
+                return alert('Please enter the title')
+              }
+              timelineStore.addNewItemToTimeline()
+              timelineStore.setShowAddItem(false)
             }}
           >
-            DELETE
+            {timelineStore.draftItem.edit ? 'UPDATE' : 'ADD'}
           </button>
-        ) : null}
-        <button
-          variant='contained'
-          onClick={() => timelineStore.setShow(false)}
-        >
-          CANCEL
-        </button>
+          &nbsp;&nbsp;
+          {timelineStore.draftItem.edit ? (
+            <button
+              className='button'
+              variant='contained'
+              onClick={() => {
+                timelineStore.deleteItem()
+                timelineStore.setShow(false)
+              }}
+            >
+              DELETE
+            </button>
+          ) : null}
+          &nbsp;&nbsp;
+          <button
+            className='button'
+            variant='contained'
+            onClick={() => timelineStore.setShow(false)}
+          >
+            CANCEL
+          </button>
+        </div>
       </div>
     </Popup>
   )

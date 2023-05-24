@@ -6,16 +6,21 @@ export default () => {
     addNewGroup: state.addNewGroup
   }))
   return (
-    <div className={styles.buttons}>
-      <button
-        onClick={() => {
-          const groupName = prompt('Please enter the group name')
-          timelineStore.addNewGroup({ groupName })
-        }}
-      >
-        add new group
-      </button>
-      <button onClick={timelineStore.loadSampleData}>load sample data</button>
-    </div>
+    <>
+      <div className={styles.buttons}>
+        <button
+          className='button'
+          onClick={() => {
+            const groupName = prompt('Please enter the group name')
+            groupName?.trim() && timelineStore.addNewGroup({ groupName })
+          }}
+        >
+          add new group
+        </button>
+        <button className='button' onClick={timelineStore.loadSampleData}>
+          load sample data
+        </button>
+      </div>
+    </>
   )
 }

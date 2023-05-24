@@ -7,11 +7,9 @@ function App () {
   return (
     <div className={styles.wrapper}>
       <div className={styles.content}>
+        <h2>TIMELINE TASK</h2>
         <TimelineView />
         <TimelineFooter />
-      </div>
-      <div className={styles.hint}>
-        Hint: Double click to add new item on timeline
       </div>
     </div>
   )

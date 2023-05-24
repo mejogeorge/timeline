@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: white;
+  border-radius: 6px;
+  width: 400px;
+  .headerText {
+    display: flex;
+    flex: 1;
+    font-size: 16px;
+    font: weight 700px;
+    margin-bottom: 12px;
+  }
+  .itemWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 8px;
+    .leftText {
+      display: flex;
+      flex: 1;
+      width: 70px;
+      color: black;
+      justify-content: flex-end;
+      margin-right: 20px;
+    }
+    .calendar {
+      display: flex;
+      flex: 2;
+      border-radius: 4px;
+      & > div {
+        border-radius: 4px;
+        padding: 5px;
+        border: 1px solid #ccc;
+      }
+    }
+    .input {
+      display: flex;
+      flex: 2;
+      min-height: 27px;
+      margin-left: 20px;
+    }
+  }
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-left: 200px;
+    margin-top: 10px;
+
+    .button {
+      margin-top: 8px;
+      margin-left: 10px;
+    }
+  }
+}
