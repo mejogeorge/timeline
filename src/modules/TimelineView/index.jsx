@@ -1,37 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useId } from 'react'
 import 'react-calendar-timeline/lib/Timeline.css'
 import Timeline from 'react-calendar-timeline'
 import moment from 'moment'
 import AddItemForm from './modules/AddItemForm'
+import { useTimelineStore } from './modules/store'
 
 const groups = [
   { id: 1, title: 'group 1', bgColor: 'red' },
   { id: 2, title: 'group 2', bgColor: 'black' },
   { id: 3, title: 'group 3', bgColor: 'black' }
-]
-
-const tempItems = [
-  {
-    id: 1,
-    group: 1,
-    title: 'item 1',
-    start_time: moment(),
-    end_time: moment().add(5, 'hour')
-  },
-  {
-    id: 2,
-    group: 2,
-    title: 'item 2',
-    start_time: moment().add(-0.5, 'hour'),
-    end_time: moment().add(0.5, 'hour')
-  },
-  {
-    id: 3,
-    group: 1,
-    title: 'item 3',
-    start_time: moment().add(2, 'hour'),
-    end_time: moment().add(3, 'hour')
-  }
 ]
 
 const keys = {
@@ -56,25 +33,15 @@ const defaultTimeEnd = moment()
   .toDate()
 
 export default props => {
-  const [items, setItems] = useState(tempItems || [])
-  const [showAddItem, setShowAddItem] = useState(false)
-  const [selectedItem, setSelectedItem] = useState({})
-  console.log('selectedItem', selectedItem)
-  const addItem = item => {
-    console.log('addItem press', [...items, { ...item }])
-    setItems([...items, { ...item }])
-  }
-
-  const removeItems = item => () => {
-    console.log('::::item press got', item)
-    // setItems(items.filter(element => element.id !== item.id))
-  }
-  const handleItemMove = () => {}
-  const handleItemResize = () => {}
+  // const [showAddItem, setShowAddItem] = useState(false)
+  // const [selectedItem, setSelectedItem] = useState({})
+  const timelineStore = useTimelineStore(state => ({
+    timeItems: state.timeItems,
+    addNewItemToTimeline: state.addNewItemToTimeline
+  }))
 
   const itemRenderer = ({
     item,
-    timelineContext,
     itemContext,
     getItemProps,
     getResizeProps
@@ -100,9 +67,12 @@ export default props => {
             borderRightWidth: itemContext.selected ? 3 : 1
           },
           // onTouchEnd: () => console.log('on item click'),
+          onClick: () => {
+            alert('itemRenderer')
+          },
           onMouseDown: () => {
             console.log('on item click', item, itemContext, rightResizeProps)
-            setSelectedItem(item)
+            // setSelectedItem(item)
             // setShowAddItem(true)
             // if (itemContext.selected) removeItems(item)()
           }
@@ -128,8 +98,7 @@ export default props => {
   return (
     <Timeline
       groups={groups}
-      items={items}
-      // keys={keys}
+      items={timelineStore.timeItems}
       fullUpdate
       itemTouchSendsClick={false}
       stackItems
@@ -137,23 +106,25 @@ export default props => {
       canMove={true}
       canResize={'both'}
       onItemClick={(itemId, e, time) => {
-        e.preventDefault()
-        // const filteredItem = items.filter(element => element.id === itemId)
-        // console.log('onItemClick props', itemId, filteredItem)
-        // selectedItem(filteredItem)
-        setShowAddItem(true)
+        alert('onItemClick')
+      }}
+      onItemSelect={() => {
+        alert('onItemSelect')
+      }}
+      onCanvasDoubleClick={(groupId, time, e) => {
+        console.log('onCanvasClick', {
+          groupId,
+          time,
+          e
+        })
+        timelineStore.addNewItemToTimeline({
+          groupId,
+          time
+        })
       }}
       itemRenderer={itemRenderer}
       defaultTimeStart={moment().add(-1, 'hour')}
       defaultTimeEnd={moment().add(12, 'hour')}
-      onItemMove={handleItemMove}
-      onItemResize={handleItemResize}
     />
-    // <AddItemForm
-    //   show={showAddItem}
-    //   selectedItem={selectedItem}
-    //   addItem={addItem}
-    //   onClose={() => setShowAddItem(false)}
-    // />
   )
 }
