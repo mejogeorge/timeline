@@ -5,19 +5,25 @@ export const timeItemsSample = [
     id: 1,
     group: 1,
     title: 'item 1',
-    start_time: moment(),
-    end_time: moment().add(5, 'hour')
+    start_time: moment().format('x'),
+    end_time: moment()
+      .add(5, 'hour')
+      .format('x')
   },
   {
     id: 2,
     group: 2,
     title: 'item 2',
-    start_time: moment().add(-0.5, 'hour'),
-    end_time: moment().add(0.5, 'hour')
+    start_time: moment()
+      .add(-0.5, 'hour')
+      .format('x'),
+    end_time: moment()
+      .add(0.5, 'hour')
+      .format('x')
   },
   {
     id: 3,
-    group: 1,
+    group: 3,
     title: 'item 3',
     start_time: moment().add(2, 'hour'),
     end_time: moment().add(3, 'hour')

@@ -12,7 +12,9 @@ export default props => {
     timeItems: state.timeItems,
     addNewItemToTimeline: state.addNewItemToTimeline,
     groups: state.groups,
-    setShowAddItem: state.setShowAddItem
+    setShowAddItem: state.setShowAddItem,
+    setDraftItem: state.setDraftItem,
+    showAddItemForm: state.showAddItemForm
   }))
 
   const itemRenderer = ({
@@ -72,38 +74,40 @@ export default props => {
   }
   return (
     <>
-      <Timeline
-        groups={timelineStore.groups}
-        items={timelineStore.timeItems}
-        fullUpdate
-        itemTouchSendsClick={false}
-        stackItems
-        itemHeightRatio={0.75}
-        canMove={true}
-        canResize={'both'}
-        onItemClick={(itemId, e, time) => {
-          alert('onItemClick')
-        }}
-        onItemSelect={() => {
-          alert('onItemSelect')
-        }}
-        onCanvasDoubleClick={(groupId, time, e) => {
-          console.log('onCanvasClick', {
-            groupId,
-            time,
-            e
-          })
-          timelineStore.setShowAddItem(true)
-          // timelineStore.addNewItemToTimeline({
-          //   groupId,
-          //   time
-          // })
-        }}
-        itemRenderer={itemRenderer}
-        defaultTimeStart={moment().add(-1, 'hour')}
-        defaultTimeEnd={moment().add(12, 'hour')}
-      />
-      <AddItemForm />
+      {timelineStore.groups?.length ? (
+        <Timeline
+          groups={timelineStore.groups}
+          items={timelineStore.timeItems}
+          fullUpdate
+          itemTouchSendsClick={false}
+          stackItems
+          itemHeightRatio={0.75}
+          canMove={true}
+          canResize={'both'}
+          onItemClick={(itemId, e, time) => {
+            alert('onItemClick')
+          }}
+          onItemSelect={() => {
+            alert('onItemSelect')
+          }}
+          onCanvasDoubleClick={(groupId, time, e) => {
+            timelineStore.setDraftItem({
+              group: groupId,
+              startTime: time,
+              endTime: time + 60 * 60 * 1000
+            })
+            timelineStore.setShowAddItem(true)
+            // timelineStore.addNewItemToTimeline({
+            //   groupId,
+            //   time
+            // })
+          }}
+          itemRenderer={itemRenderer}
+          defaultTimeStart={moment().add(-1, 'hour')}
+          defaultTimeEnd={moment().add(1, 'day')}
+        />
+      ) : null}
+      {timelineStore.showAddItemForm && <AddItemForm />}
     </>
   )
 }

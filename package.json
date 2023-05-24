@@ -10,12 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vanilla-extract/css": "^1.11.0",
     "interactjs": "^1.10.17",
     "moment": "^2.29.4",
     "react": "^18.2.0",
-    "react-calendar": "^4.2.1",
     "react-calendar-timeline": "^0.28.0",
+    "react-datetime-picker": "^5.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.0",
     "zustand": "^4.3.8"

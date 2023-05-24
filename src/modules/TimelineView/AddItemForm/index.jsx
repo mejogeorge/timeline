@@ -1,40 +1,33 @@
-import React, { useState, useId } from 'react'
-import Calendar from 'react-calendar'
+import React from 'react'
+import 'react-datetime-picker/dist/DateTimePicker.css'
 import 'react-calendar/dist/Calendar.css'
-import moment from 'moment'
+import 'react-clock/dist/Clock.css'
 import Popup from '../../../components/Popup'
 import { useTimelineStore } from '../store'
+import DateTimePicker from 'react-datetime-picker'
+import moment from 'moment'
 
 Popup
 export default props => {
   const timelineStore = useTimelineStore(state => ({
     setShow: state.setShowAddItem,
-    showForm: state.showAddItemForm
+    showForm: state.showAddItemForm,
+    addNewItemToTimeline: state.addNewItemToTimeline,
+    setDraftItem: state.setDraftItem,
+    draftItem: state.draftItem,
+    setShowAddItem: state.setShowAddItem
   }))
 
-  const [formData, setFormData] = useState({
-    id: useId(),
-    title: '',
-    group: '',
-    start_time: moment().add(2, 'hour'),
-    end_time: moment().add(3, 'hour')
-  })
-  const [showCalender, setShowCalender] = useState({})
+  // const [showCalender, setShowCalender] = useState({})
 
-  const onSelectDate = key => event => {}
-  const onChange = key => event => {
-    console.log('key, text', key, event.target.value, formData)
-    setFormData({
-      ...formData,
-      [key]: event.target.value
+  const onFieldChange = key => value => {
+    timelineStore.setDraftItem({
+      [key]: value
     })
   }
-  const addItem = () => {
-    props.addItem(formData)
-    props.onClose()
-  }
+
   return (
-    <Popup show={timelineStore.showForm}>
+    <Popup show>
       <div
         style={{
           display: 'flex',
@@ -48,18 +41,39 @@ export default props => {
           <span style={{ flex: 1, color: 'black', backgroundColor: 'pink' }}>
             Title
           </span>
-          <input style={{ flex: 2 }} type='text' onChange={onChange('title')} />
+          <input
+            style={{ flex: 2 }}
+            type='text'
+            onChange={e => onFieldChange('title')(e.target.value)}
+          />
         </div>
         <div style={{ flexDirection: 'row', flex: 1 }}>
-          <span style={{ flex: 1, color: 'black' }}>group</span>
-          <input style={{ flex: 2 }} type='text' onChange={onChange('group')} />
+          <span style={{ flex: 1, color: 'black' }}>start time</span>
+          <DateTimePicker
+            onChange={value => {
+              console.log('onChange', value)
+              onFieldChange('startTime')(value)
+            }}
+            value={moment(timelineStore.draftItem['startTime']).toDate()}
+          />
         </div>
         <div style={{ flexDirection: 'row', flex: 1 }}>
           <span style={{ flex: 1, color: 'black' }}>end time</span>
-          <input style={{ flex: 2 }} type='text' />
+          <DateTimePicker
+            onChange={onFieldChange('endTime')}
+            value={moment(timelineStore.draftItem['endTime']).toDate()}
+          />
         </div>
-        {showCalender ? <Calendar onChange={onSelectDate} /> : nul}
-        <button variant='contained' onClick={addItem}>
+        <button
+          variant='contained'
+          onClick={() => {
+            if (!timelineStore.draftItem.title) {
+              return alert('Please enter the title')
+            }
+            timelineStore.addNewItemToTimeline()
+            timelineStore.setShowAddItem(false)
+          }}
+        >
           ADD
         </button>
         <button

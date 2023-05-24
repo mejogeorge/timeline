@@ -6,42 +6,59 @@ import moment from 'moment'
 import { groupsSample, timeItemsSample } from './constants'
 
 export const useTimelineStore = create(
-  devtools((set, get) => ({
-    ...initialState,
-    addNewItemToTimeline: ({ groupId, time }) => {
-      const id = uuid4()
-      const newItem = {
-        id,
-        group: groupId,
-        title: 'item 1' + id,
-        start_time: moment(time),
-        end_time: moment(time).add(1, 'hour')
+  devtools(
+    (set, get) => ({
+      ...initialState,
+      addNewItemToTimeline: () => {
+        const id = uuid4()
+        const { group, title, startTime, endTime } = get().draftItem
+        const newItem = {
+          id,
+          group,
+          title,
+          start_time: startTime,
+          end_time: endTime
+        }
+        set(state => ({
+          timeItems: [...state.timeItems, newItem]
+        }))
+      },
+      addNewGroup: ({ groupName }) => {
+        const id = uuid4()
+        const newGroup = {
+          id,
+          title: groupName,
+          bgColor: 'red'
+        }
+        set({
+          groups: [...get().groups, newGroup]
+        })
+      },
+      loadSampleData: () => {
+        set({
+          timeItems: timeItemsSample,
+          groups: groupsSample
+        })
+      },
+      setShowAddItem: showAddItemForm => {
+        set({
+          showAddItemForm
+        })
+      },
+      setDraftItem: draftItem => {
+        set({
+          draftItem: {
+            ...get().draftItem,
+            ...draftItem
+          }
+        })
+      },
+      clearDraft: () => {
+        set({
+          draftItem: {}
+        })
       }
-      set(state => ({
-        timeItems: [...state.timeItems, newItem]
-      }))
-    },
-    addNewGroup: ({ groupName }) => {
-      const id = uuid4()
-      const newGroup = {
-        id,
-        title: groupName,
-        bgColor: 'red'
-      }
-      set({
-        groups: [...get().groups, newGroup]
-      })
-    },
-    loadSampleData: () => {
-      set({
-        timeItems: timeItemsSample,
-        groups: groupsSample
-      })
-    },
-    setShowAddItem: showAddItemForm => {
-      set({
-        showAddItemForm
-      })
-    }
-  }))
+    }),
+    { name: 'timeline-store' }
+  )
 )
