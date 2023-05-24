@@ -1,13 +1,10 @@
-import React, { useState, useId } from 'react'
 import 'react-calendar-timeline/lib/Timeline.css'
 import Timeline from 'react-calendar-timeline'
 import moment from 'moment'
 import AddItemForm from './AddItemForm'
 import { useTimelineStore } from './store'
 
-export default props => {
-  // const [showAddItem, setShowAddItem] = useState(false)
-  // const [selectedItem, setSelectedItem] = useState({})
+export default () => {
   const timelineStore = useTimelineStore(state => ({
     timeItems: state.timeItems,
     addNewItemToTimeline: state.addNewItemToTimeline,
@@ -17,46 +14,19 @@ export default props => {
     showAddItemForm: state.showAddItemForm
   }))
 
-  const itemRenderer = ({
-    item,
-    itemContext,
-    getItemProps,
-    getResizeProps
-  }) => {
-    const { left: leftResizeProps, right: rightResizeProps } = getResizeProps()
-    const backgroundColor = itemContext.selected
-      ? itemContext.dragging
-        ? 'red'
-        : item.selectedBgColor
-      : item.bgColor
-    const borderColor = itemContext.resizing ? 'red' : item.color
+  const itemRenderer = ({ itemContext, getItemProps }) => {
+    const color = itemContext.selected ? 'black' : 'white'
     return (
       <div
         {...getItemProps({
           style: {
-            backgroundColor,
-            color: item.color,
-            borderColor,
-            borderStyle: 'solid',
-            borderWidth: 1,
+            color,
             borderRadius: 4,
             borderLeftWidth: itemContext.selected ? 3 : 1,
             borderRightWidth: itemContext.selected ? 3 : 1
-          },
-          // onTouchEnd: () => console.log('on item click'),
-          onClick: () => {
-            alert('itemRenderer')
-          },
-          onMouseDown: () => {
-            console.log('on item click', item, itemContext, rightResizeProps)
-            // setSelectedItem(item)
-            // setShowAddItem(true)
-            // if (itemContext.selected) removeItems(item)()
           }
         })}
       >
-        {itemContext.useResizeHandle ? <div {...leftResizeProps} /> : null}
-
         <div
           style={{
             height: itemContext.dimensions.height,
@@ -68,7 +38,6 @@ export default props => {
         >
           {itemContext.title}
         </div>
-        {itemContext.useResizeHandle ? <div {...rightResizeProps} /> : null}
       </div>
     )
   }
@@ -84,11 +53,8 @@ export default props => {
           itemHeightRatio={0.75}
           canMove={true}
           canResize={'both'}
-          onItemClick={(itemId, e, time) => {
-            alert('onItemClick')
-          }}
-          onItemSelect={() => {
-            alert('onItemSelect')
+          onItemDoubleClick={data => {
+            console.log('onItemDoubleClick', data)
           }}
           onCanvasDoubleClick={(groupId, time, e) => {
             timelineStore.setDraftItem({
@@ -97,10 +63,6 @@ export default props => {
               endTime: time + 60 * 60 * 1000
             })
             timelineStore.setShowAddItem(true)
-            // timelineStore.addNewItemToTimeline({
-            //   groupId,
-            //   time
-            // })
           }}
           itemRenderer={itemRenderer}
           defaultTimeStart={moment().add(-1, 'hour')}
