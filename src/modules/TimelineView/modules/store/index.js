@@ -1,14 +1,15 @@
 import { create } from 'zustand'
 import initialState from './initialState'
 import { devtools } from 'zustand/middleware'
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuid4 } from 'uuid'
 import moment from 'moment'
+import { groupsSample, timeItemsSample } from './constants'
 
 export const useTimelineStore = create(
-  devtools(set => ({
+  devtools((set, get) => ({
     ...initialState,
     addNewItemToTimeline: ({ groupId, time }) => {
-      const id = uuidv4()
+      const id = uuid4()
       const newItem = {
         id,
         group: groupId,
@@ -19,6 +20,23 @@ export const useTimelineStore = create(
       set(state => ({
         timeItems: [...state.timeItems, newItem]
       }))
+    },
+    addNewGroup: ({ groupName }) => {
+      const id = uuid4()
+      const newGroup = {
+        id,
+        title: groupName,
+        bgColor: 'red'
+      }
+      set({
+        groups: [...get().groups, newGroup]
+      })
+    },
+    loadSampleData: () => {
+      set({
+        timeItems: timeItemsSample,
+        groups: groupsSample
+      })
     }
   }))
 )

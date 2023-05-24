@@ -23,3 +23,9 @@ export const timeItemsSample = [
     end_time: moment().add(3, 'hour')
   }
 ]
+
+export const groupsSample = [
+  { id: 1, title: 'group 1', bgColor: 'red' },
+  { id: 2, title: 'group 2', bgColor: 'black' },
+  { id: 3, title: 'group 3', bgColor: 'black' }
+]

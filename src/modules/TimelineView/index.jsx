@@ -5,39 +5,13 @@ import moment from 'moment'
 import AddItemForm from './modules/AddItemForm'
 import { useTimelineStore } from './modules/store'
 
-const groups = [
-  { id: 1, title: 'group 1', bgColor: 'red' },
-  { id: 2, title: 'group 2', bgColor: 'black' },
-  { id: 3, title: 'group 3', bgColor: 'black' }
-]
-
-const keys = {
-  groupIdKey: 'id',
-  groupTitleKey: 'title',
-  groupRightTitleKey: 'rightTitle',
-  itemIdKey: 'id',
-  itemTitleKey: 'title',
-  itemDivTitleKey: 'title',
-  itemGroupKey: 'group',
-  itemTimeStartKey: 'start',
-  itemTimeEndKey: 'end',
-  groupLabelKey: 'title'
-}
-
-const defaultTimeStart = moment()
-  .startOf('day')
-  .toDate()
-const defaultTimeEnd = moment()
-  .startOf('day')
-  .add(1, 'day')
-  .toDate()
-
 export default props => {
   // const [showAddItem, setShowAddItem] = useState(false)
   // const [selectedItem, setSelectedItem] = useState({})
   const timelineStore = useTimelineStore(state => ({
     timeItems: state.timeItems,
-    addNewItemToTimeline: state.addNewItemToTimeline
+    addNewItemToTimeline: state.addNewItemToTimeline,
+    groups: state.groups
   }))
 
   const itemRenderer = ({
@@ -97,7 +71,7 @@ export default props => {
   }
   return (
     <Timeline
-      groups={groups}
+      groups={timelineStore.groups}
       items={timelineStore.timeItems}
       fullUpdate
       itemTouchSendsClick={false}

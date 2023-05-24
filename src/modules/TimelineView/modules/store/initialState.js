@@ -1,5 +1,4 @@
-import { timeItemsSample } from './constants'
-
 export default {
-  timeItems: timeItemsSample
+  timeItems: [],
+  groups: []
 }
