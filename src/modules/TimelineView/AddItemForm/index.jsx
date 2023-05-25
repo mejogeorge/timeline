@@ -47,6 +47,7 @@ export default () => {
         <div className={styles.itemWrapper}>
           <span className={styles.leftText}>Start Time:</span>
           <DateTimePicker
+            format='y-MM-dd HH:mm:ss'
             className={styles.calendar}
             onChange={value => {
               console.log('onChange', value)
@@ -59,6 +60,7 @@ export default () => {
         <div className={styles.itemWrapper}>
           <span className={styles.leftText}>End Time:</span>
           <DateTimePicker
+            format='y-MM-dd HH:mm:ss'
             className={styles.calendar}
             onChange={onFieldChange('endTime')}
             value={moment(timelineStore.draftItem['endTime']).toDate()}
