@@ -66,7 +66,8 @@ export const useTimelineStore = create(
       },
       setShowAddItem: showAddItemForm => {
         set({
-          showAddItemForm
+          showAddItemForm,
+          draftItem: showAddItemForm ? get().draftItem : {}
         })
       },
       setDraftItem: draftItem => {
