@@ -6,7 +6,7 @@ import { useTimelineStore } from './store'
 import TimelineEmpty from './TimelineEmpty'
 import Hint from './Hint'
 
-export default () => {
+const TimelineView = () => {
   const timelineStore = useTimelineStore(state => ({
     timeItems: state.timeItems,
     addNewItemToTimeline: state.addNewItemToTimeline,
@@ -16,6 +16,21 @@ export default () => {
     showAddItemForm: state.showAddItemForm,
     editItem: state.editItem
   }))
+
+  const onItemDoubleClick = itemId => {
+    console.log('onItemDoubleClick', itemId)
+    timelineStore.editItem(itemId)
+    timelineStore.setShowAddItem(true)
+  }
+
+  const onCanvasDoubleClick = (groupId, time, e) => {
+    timelineStore.setDraftItem({
+      group: groupId,
+      startTime: time,
+      endTime: time + 60 * 60 * 1000
+    })
+    timelineStore.setShowAddItem(true)
+  }
 
   const itemRenderer = ({ itemContext, getItemProps }) => {
     const color = itemContext.selected ? 'black' : 'white'
@@ -55,20 +70,8 @@ export default () => {
             itemTouchSendsClick={false}
             stackItems
             itemHeightRatio={0.75}
-            canMove={true}
-            onItemDoubleClick={itemId => {
-              console.log('onItemDoubleClick', itemId)
-              timelineStore.editItem(itemId)
-              timelineStore.setShowAddItem(true)
-            }}
-            onCanvasDoubleClick={(groupId, time, e) => {
-              timelineStore.setDraftItem({
-                group: groupId,
-                startTime: time,
-                endTime: time + 60 * 60 * 1000
-              })
-              timelineStore.setShowAddItem(true)
-            }}
+            onItemDoubleClick={onItemDoubleClick}
+            onCanvasDoubleClick={onCanvasDoubleClick}
             itemRenderer={itemRenderer}
             defaultTimeStart={moment().add(-1, 'hour')}
             defaultTimeEnd={moment().add(1, 'day')}
@@ -82,3 +85,5 @@ export default () => {
     </>
   )
 }
+
+export default TimelineView

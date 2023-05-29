@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default props => {
+const Popup = props => {
   if (!props.show) return null
   return (
     <div
@@ -21,3 +21,5 @@ export default props => {
     </div>
   )
 }
+
+export default Popup

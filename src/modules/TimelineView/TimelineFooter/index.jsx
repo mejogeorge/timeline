@@ -1,6 +1,6 @@
 import { useTimelineStore } from '../store'
 import styles from './TimelineFooter.module.scss'
-export default () => {
+const TimelineFooter = () => {
   const timelineStore = useTimelineStore(state => ({
     loadSampleData: state.loadSampleData,
     addNewGroup: state.addNewGroup
@@ -24,3 +24,5 @@ export default () => {
     </>
   )
 }
+
+export default TimelineFooter

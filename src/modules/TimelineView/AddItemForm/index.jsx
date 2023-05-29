@@ -8,8 +8,7 @@ import DateTimePicker from 'react-datetime-picker'
 import moment from 'moment'
 import styles from './AddItemForm.module.scss'
 
-Popup
-export default () => {
+const AddItemForm = () => {
   const timelineStore = useTimelineStore(state => ({
     setShow: state.setShowAddItem,
     showForm: state.showAddItemForm,
@@ -107,3 +106,4 @@ export default () => {
     </Popup>
   )
 }
+export default AddItemForm
